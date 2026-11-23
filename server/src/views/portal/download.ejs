@@ -1,0 +1,67 @@
+<% const title = 'Unduh Aplikasi — WhiteSecurity' %>
+<%- include('partials/header', { title }) %>
+<div class="container">
+  <div class="card download-hero">
+    <img src="/antivirus/assets/logo-mark.png" alt="WhiteSecurity" class="download-logo" width="160" height="160">
+    <div class="download-body">
+      <h1>WhiteSecurity Antivirus untuk Android</h1>
+      <p class="subtitle" style="margin-bottom:12px;">Scan malware, spyware &amp; stalkerware, perlindungan real-time, dan update otomatis — <strong>gratis</strong>.</p>
+      <% if (release) { %>
+        <a class="btn download-btn" href="/antivirus/download/apk" download>
+          ⬇ Unduh APK v<%= release.version %>
+        </a>
+        <div class="download-meta">
+          <%= (release.size / 1048576).toFixed(1) %> MB · Android <%= release.minAndroid || '8.0' %> ke atas
+          <% if (release.releasedAt) { %> · rilis <%= fmtDate(release.releasedAt) %><% } %>
+        </div>
+      <% } else { %>
+        <div class="error-banner" style="margin:0;">Aplikasi sedang disiapkan. Silakan cek kembali nanti.</div>
+      <% } %>
+    </div>
+  </div>
+
+  <h2>Cara memasang</h2>
+  <div class="card">
+    <ol class="steps">
+      <li>Ketuk <strong>Unduh APK</strong> di atas dari HP Android Anda.</li>
+      <li>Buka file <span class="mono">WhiteSecurity-v<%= release ? release.version : 'x.y.z' %>.apk</span> dari notifikasi unduhan atau folder <em>Download</em>.</li>
+      <li>Jika muncul peringatan, ketuk <strong>Setelan</strong> lalu aktifkan <strong>Izinkan dari sumber ini</strong> untuk browser Anda, kemudian kembali dan ketuk <strong>Instal</strong>.</li>
+      <li>Buka WhiteSecurity, izinkan notifikasi, lalu ketuk <strong>Scan Aplikasi Terinstal</strong>.</li>
+      <li>Punya lisensi Premium? Ketuk ikon mahkota → masukkan kode <span class="mono">WSEC-…</span>. <a href="/antivirus/products">Lihat paket Premium</a>.</li>
+    </ol>
+    <p class="subtitle" style="margin:12px 0 0;">Setelah selesai memasang, Anda boleh mematikan lagi izin "sumber ini" untuk browser.</p>
+  </div>
+
+  <div class="two-col" style="margin-top:16px;">
+    <div class="card">
+      <h2 style="margin-top:0;">Gratis</h2>
+      <ul class="feature-list">
+        <li>Scan malware &amp; spyware untuk aplikasi terinstal dan file APK</li>
+        <li>Deteksi stalkerware (aplikasi penyadap) &amp; aplikasi tersembunyi</li>
+        <li>Perlindungan real-time saat aplikasi baru dipasang</li>
+        <li>Cek ke cloud threat database + update signature otomatis</li>
+        <li>Riwayat scan tanpa batas</li>
+        <li>Update otomatis ke versi terbaru</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0;">Premium</h2>
+      <ul class="feature-list">
+        <li>Perisai Anti-Penipuan APK</li>
+        <li>Pemeriksaan Keamanan Perangkat (skor 0–100)</li>
+        <li>Scan mendalam aplikasi sistem</li>
+      </ul>
+      <a class="btn secondary" href="/antivirus/products">Lihat paket</a>
+    </div>
+  </div>
+
+  <% if (release && release.sha256) { %>
+  <h2>Verifikasi file</h2>
+  <div class="card">
+    <p class="subtitle" style="margin:0 0 8px;">Hanya unduh WhiteSecurity dari <strong>whitesecurity.id</strong>. Sidik jari SHA-256 file resmi:</p>
+    <div class="mono sha-box"><%= release.sha256 %></div>
+  </div>
+  <p class="subtitle" style="margin-top:12px;">Deteksi stalkerware memakai data <a href="https://github.com/AssoEchap/stalkerware-indicators" rel="noopener" target="_blank">Echap stalkerware-indicators</a> (CC BY 4.0).</p>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

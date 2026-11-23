@@ -1,0 +1,159 @@
+<% const title = 'Dashboard — WhiteSecurity Portal' %>
+<%- include('partials/header', { title }) %>
+<%
+  const fmtDate = (v) => { const ms = parseDbDate(v); return ms ? new Date(ms).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Jakarta' }) : '—'; };
+  const fmtDateTime = (v) => { const ms = parseDbDate(v); return ms ? new Date(ms).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Jakarta' }) : '—'; };
+  const ago = (v) => {
+    const ms = parseDbDate(v); if (!ms) return 'belum pernah';
+    const m = Math.round((Date.now() - ms) / 60000);
+    if (m < 2) return 'baru saja';
+    if (m < 60) return m + ' menit lalu';
+    if (m < 1440) return Math.round(m / 60) + ' jam lalu';
+    return Math.round(m / 1440) + ' hari lalu';
+  };
+  const maskDevice = (id) => id.length > 10 ? id.slice(0, 4) + '••••' + id.slice(-4) : id;
+  const hour = Number(new Date().toLocaleString('en-US', { hour: 'numeric', hour12: false, timeZone: 'Asia/Jakarta' }));
+  const greeting = hour < 11 ? 'Selamat pagi' : hour < 15 ? 'Selamat siang' : hour < 18 ? 'Selamat sore' : 'Selamat malam';
+  const expiringSoon = primary && primary.daysLeft !== null && primary.daysLeft <= 14;
+%>
+<div class="container">
+  <h1><%= greeting %>, <%= user.name || user.email %> 👋</h1>
+  <p class="subtitle">Ringkasan perlindungan perangkat Anda.</p>
+
+  <div class="card hero <%= primary ? (expiringSoon ? 'hero-warn' : 'hero-ok') : 'hero-off' %>">
+    <div class="hero-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3l7 3v6c0 4.5-3 7.9-7 9-4-1.1-7-4.5-7-9V6l7-3z"/>
+        <% if (primary) { %><path d="M8.5 12l2.5 2.5 4.5-5"/><% } else { %><path d="M12 8v5"/><path d="M12 16h.01"/><% } %>
+      </svg>
+    </div>
+    <div class="hero-body">
+      <% if (primary) { %>
+        <div class="hero-title">Perlindungan Premium aktif</div>
+        <div class="hero-sub">
+          <% if (primary.daysLeft === null) { %>
+            Lisensi seumur hidup — tidak perlu diperpanjang.
+          <% } else { %>
+            Sisa <strong><%= primary.daysLeft %> hari</strong> · berlaku hingga <%= fmtDate(primary.expires_at) %>
+          <% } %>
+        </div>
+        <% if (primary.daysLeft !== null) { %>
+          <div class="progress" role="progressbar" aria-valuenow="<%= primary.remainingPct %>" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar" style="width:<%= primary.remainingPct %>%"></div>
+          </div>
+        <% } %>
+      <% } else { %>
+        <div class="hero-title">Belum terlindungi Premium</div>
+        <div class="hero-sub">Perlindungan dasar sudah aktif gratis. Premium menambah Perisai Anti-Penipuan APK, Pemeriksaan Keamanan Perangkat, dan scan mendalam aplikasi sistem.</div>
+      <% } %>
+    </div>
+    <% if (!primary || expiringSoon) { %>
+      <a class="btn hero-cta" href="/antivirus/products"><%= primary ? 'Perpanjang' : 'Lihat paket' %></a>
+    <% } %>
+  </div>
+
+  <div class="stat-grid">
+    <div class="card"><div class="stat-value"><%= stats.activeLicenses %></div><div class="stat-label">Lisensi aktif</div></div>
+    <div class="card"><div class="stat-value"><%= stats.devicesUsed %><span class="stat-of">/<%= stats.devicesMax %></span></div><div class="stat-label">Perangkat terhubung</div></div>
+    <div class="card"><div class="stat-value"><%= Number(stats.signatures).toLocaleString('id-ID') %></div><div class="stat-label">Signature ancaman<% if (stats.signaturesUpdated) { %> · update <%= ago(stats.signaturesUpdated) %><% } %></div></div>
+    <div class="card"><div class="stat-value">Rp<%= Number(stats.totalSpent).toLocaleString('id-ID') %></div><div class="stat-label">Total pembelian</div></div>
+  </div>
+
+  <div class="card admin-shortcut">
+    <div><strong>📱 Aplikasi Android WhiteSecurity</strong><div class="subtitle" style="margin:0;">Pasang di HP Anda, lalu masukkan kode lisensi di menu Premium.</div></div>
+    <a class="btn" href="/antivirus/download" style="margin-top:0;">Unduh APK</a>
+  </div>
+
+  <% if (user.is_admin) { %>
+    <div class="card admin-shortcut">
+      <div><strong>Mode Admin</strong><div class="subtitle" style="margin:0;">Kelola lisensi, pesanan, produk, pengguna, dan signature malware.</div></div>
+      <a class="btn" href="/antivirus/admin" style="margin-top:0;">Buka Dashboard Admin →</a>
+    </div>
+  <% } %>
+
+  <h2>Lisensi Saya</h2>
+  <% if (licenses.length === 0) { %>
+    <div class="card empty">
+      Belum ada lisensi. <a href="/antivirus/products">Lihat paket premium</a> untuk membeli.
+    </div>
+  <% } else { %>
+    <% licenses.forEach(function(l) { const devs = devicesByLicense[l.id] || []; %>
+    <div class="card license-card">
+      <div class="license-head">
+        <div>
+          <div class="license-key mono"><%= l.license_key %></div>
+          <div class="subtitle" style="margin:4px 0 0;">
+            Paket <%= l.plan %> · <%= devs.length %>/<%= l.max_devices %> perangkat ·
+            <%= l.expires_at ? 'berlaku hingga ' + fmtDate(l.expires_at) : 'seumur hidup' %>
+          </div>
+        </div>
+        <div class="license-actions">
+          <% if (l.state === 'revoked') { %><span class="badge badge-bad">Dicabut</span>
+          <% } else if (l.state === 'expired') { %><span class="badge badge-warn">Kedaluwarsa</span>
+          <% } else { %><span class="badge badge-ok">Aktif</span><% } %>
+          <button type="button" class="secondary small copy-btn" data-copy="<%= l.license_key %>">Salin kode</button>
+        </div>
+      </div>
+      <% if (devs.length) { %>
+        <div class="device-list">
+          <% devs.forEach(function(d) { %>
+            <div class="device">
+              <span class="device-dot <%= d.last_seen_at && (Date.now() - parseDbDate(d.last_seen_at)) < 2 * 86400000 ? 'on' : '' %>"></span>
+              <span class="mono"><%= maskDevice(d.device_id) %></span>
+              <span class="device-meta">aktif sejak <%= fmtDate(d.activated_at) %> · terakhir terlihat <%= ago(d.last_seen_at) %></span>
+            </div>
+          <% }) %>
+        </div>
+      <% } else if (l.state === 'active') { %>
+        <div class="device-empty">Belum dipakai di perangkat mana pun. Masukkan kode ini di aplikasi WhiteSecurity → Premium.</div>
+      <% } %>
+    </div>
+    <% }) %>
+  <% } %>
+
+  <div class="two-col">
+    <div class="card">
+      <h2 style="margin-top:0;">🔍 Cek File Mencurigakan</h2>
+      <p class="subtitle" style="margin-bottom:12px;">Pilih file (APK, dokumen, dll). Sidik jari SHA-256 dihitung di browser Anda — <strong>file tidak diunggah</strong> — lalu dicocokkan dengan database ancaman.</p>
+      <label for="scan-file">File</label>
+      <input type="file" id="scan-file">
+      <label for="scan-hash">atau tempel hash SHA-256</label>
+      <input type="text" id="scan-hash" class="mono" placeholder="64 karakter heksadesimal" autocomplete="off" spellcheck="false">
+      <button type="button" id="scan-btn" data-csrf="<%= csrfToken %>">Periksa</button>
+      <div id="scan-result" class="scan-result" hidden></div>
+    </div>
+    <div class="card tip-card">
+      <h2 style="margin-top:0;">💡 Tips Keamanan Hari Ini</h2>
+      <p class="tip-text"><%= tip %></p>
+      <p class="subtitle" style="margin:0;">Tips baru setiap hari.</p>
+    </div>
+  </div>
+
+  <h2>Riwayat Pesanan Terakhir</h2>
+  <% if (orders.length === 0) { %>
+    <div class="card empty">Belum ada pesanan.</div>
+  <% } else { %>
+    <div class="table-wrap card">
+      <table>
+        <thead><tr><th>ID Pesanan</th><th>Produk</th><th>Jumlah</th><th>Status</th><th>Tanggal</th></tr></thead>
+        <tbody>
+          <% orders.forEach(function(o) { %>
+          <tr>
+            <td class="mono"><%= o.order_id %></td>
+            <td><%= o.product_name %></td>
+            <td>Rp<%= Number(o.amount).toLocaleString('id-ID') %></td>
+            <td>
+              <% if (o.status === 'paid') { %><span class="badge badge-ok">Lunas</span>
+              <% } else if (o.status === 'pending' || o.status === 'processing') { %><span class="badge badge-warn">Menunggu</span>
+              <% } else { %><span class="badge badge-bad"><%= o.status %></span><% } %>
+            </td>
+            <td><%= fmtDateTime(o.created_at) %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+<script src="/antivirus/assets/dashboard.js" defer></script>
+<%- include('partials/footer') %>

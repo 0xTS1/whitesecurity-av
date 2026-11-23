@@ -1,0 +1,61 @@
+<% const title = 'Lisensi — Admin WhiteSecurity' %>
+<%- include('../partials/header', { title }) %>
+<div class="container wide">
+  <h1>Lisensi</h1>
+  <%- include('_tabs', { active: 'licenses' }) %>
+
+  <h2>Buat Lisensi Manual</h2>
+  <div class="card">
+    <form method="POST" action="/antivirus/admin/licenses">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>Plan</label>
+      <input type="text" name="plan" value="premium">
+      <label>Jumlah Perangkat</label>
+      <input type="number" name="devices" value="1" min="1">
+      <label>Berlaku (hari, kosongkan = selamanya)</label>
+      <input type="number" name="days" min="1">
+      <label>Catatan</label>
+      <input type="text" name="note" placeholder="mis. email customer">
+      <button type="submit">Buat Lisensi</button>
+    </form>
+  </div>
+
+  <h2>Semua Lisensi</h2>
+  <div class="table-wrap card">
+    <table>
+      <thead><tr><th>Kode</th><th>Pemilik</th><th>Paket</th><th>Perangkat</th><th>Berlaku Hingga</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <% licenses.forEach(function(l) {
+          const expired = l.expires_at && new Date(l.expires_at).getTime() < Date.now();
+        %>
+        <tr>
+          <td class="mono"><%= l.license_key %></td>
+          <td><%= l.owner_email || (l.note ? l.note : '-') %></td>
+          <td><%= l.plan %></td>
+          <td><%= l.device_count %>/<%= l.max_devices %></td>
+          <td><%= l.expires_at ? new Date(l.expires_at).toLocaleDateString('id-ID') : 'Selamanya' %></td>
+          <td>
+            <% if (l.revoked) { %><span class="badge badge-bad">Dicabut</span>
+            <% } else if (expired) { %><span class="badge badge-warn">Kedaluwarsa</span>
+            <% } else { %><span class="badge badge-ok">Aktif</span><% } %>
+          </td>
+          <td>
+            <% if (l.revoked) { %>
+              <form class="inline" method="POST" action="/antivirus/admin/licenses/<%= l.id %>/unrevoke">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button class="small secondary" type="submit">Aktifkan</button>
+              </form>
+            <% } else { %>
+              <form class="inline" method="POST" action="/antivirus/admin/licenses/<%= l.id %>/revoke">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button class="small danger" type="submit">Cabut</button>
+              </form>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../partials/footer') %>

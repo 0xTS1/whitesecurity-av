@@ -1,0 +1,37 @@
+<% const title = 'Pesanan — Admin WhiteSecurity' %>
+<%- include('../partials/header', { title }) %>
+<div class="container wide">
+  <h1>Pesanan &amp; Pembayaran</h1>
+  <%- include('_tabs', { active: 'orders' }) %>
+  <div class="table-wrap card">
+    <table>
+      <thead><tr><th>ID Pesanan</th><th>Pengguna</th><th>Produk</th><th>Jumlah</th><th>Status</th><th>Tanggal</th><th></th></tr></thead>
+      <tbody>
+        <% orders.forEach(function(o) { %>
+        <tr>
+          <td class="mono"><%= o.order_id %></td>
+          <td><%= o.user_email %></td>
+          <td><%= o.product_name %></td>
+          <td>Rp<%= Number(o.amount).toLocaleString('id-ID') %></td>
+          <td>
+            <% if (o.status === 'paid') { %><span class="badge badge-ok">Lunas</span>
+            <% } else if (o.status === 'pending' || o.status === 'processing') { %><span class="badge badge-warn">Menunggu</span>
+            <% } else { %><span class="badge badge-bad"><%= o.status %></span><% } %>
+          </td>
+          <td><%= new Date(o.created_at).toLocaleString('id-ID') %></td>
+          <td>
+            <% if (o.status !== 'paid') { %>
+            <form class="inline" method="POST" action="/antivirus/admin/orders/<%= o.order_id %>/mark-paid"
+                  onsubmit="return confirm('Tandai pesanan ini lunas secara manual? Hanya lakukan jika pembayaran sudah dikonfirmasi di luar sistem (mis. webhook Midtrans gagal/terlambat).')">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="small secondary" type="submit">Tandai Lunas</button>
+            </form>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../partials/footer') %>

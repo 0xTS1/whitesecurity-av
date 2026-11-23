@@ -1,0 +1,42 @@
+<% const title = 'Source Code — Admin WhiteSecurity' %>
+<%- include('../partials/header', { title }) %>
+<div class="container wide">
+  <h1>Source Code</h1>
+  <%- include('_tabs', { active: 'source' }) %>
+  <% if (notice) { %><div class="success-banner"><%= notice %></div><% } %>
+
+  <div class="table-wrap card">
+    <% if (files.length === 0) { %>
+      <div class="empty">Belum ada arsip. Klik "Buat ulang dari kode terbaru".</div>
+    <% } else { %>
+    <table>
+      <thead><tr><th>Arsip</th><th>Isi</th><th>Ukuran</th><th>Dibuat</th><th></th></tr></thead>
+      <tbody>
+        <% files.forEach(function(f) { %>
+        <tr>
+          <td class="mono"><%= f.name %></td>
+          <td><%= f.kind === 'android' ? 'Aplikasi Android (Kotlin / Jetpack Compose)' : 'Web portal & API (Node.js / Express)' %></td>
+          <td><%= (f.size / 1024).toFixed(0) %> KB</td>
+          <td><%= f.mtime.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Jakarta' }) %></td>
+          <td><a class="btn small" style="margin-top:0;" href="/antivirus/admin/source/download/<%= encodeURIComponent(f.name) %>">⬇ Unduh</a></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } %>
+  </div>
+
+  <form method="POST" action="/antivirus/admin/source/rebuild" class="inline">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <button type="submit" class="secondary">↻ Buat ulang dari kode terbaru</button>
+  </form>
+
+  <div class="card" style="margin-top:20px;">
+    <strong>🔒 Tidak ikut di arsip (sengaja):</strong>
+    <span class="mono">release.keystore</span>, <span class="mono">local.properties</span> (password keystore &amp; API key),
+    <span class="mono">.env</span>, dan database. File rahasia ini hanya boleh diambil lewat SSH —
+    jika keystore bocor, orang lain bisa menerbitkan "update" palsu ke semua pengguna.
+    <p class="subtitle" style="margin:8px 0 0;">Buka di VS Code: ekstrak zip → File → Open Folder. Untuk build APK, salin <span class="mono">local.properties</span> &amp; keystore ke folder <span class="mono">android/</span> lalu jalankan <span class="mono">./gradlew assembleRelease</span>.</p>
+  </div>
+</div>
+<%- include('../partials/footer') %>

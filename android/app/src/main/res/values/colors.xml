@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sky_blue">#3FA9F5</color>
+    <color name="sky_blue_dark">#0B74C4</color>
+    <color name="near_black">#14171A</color>
+    <color name="off_white">#F7FAFC</color>
+    <color name="pure_white">#FFFFFF</color>
+    <!-- Launcher icon background — matches whitesecurity.id dark theme -->
+    <color name="ic_launcher_bg">#0A0A0B</color>
+</resources>

@@ -1,0 +1,131 @@
+<% const title = 'Monitoring Pengguna — Admin WhiteSecurity' %>
+<%- include('../partials/header', { title }) %>
+<%
+  const qs = (over) => {
+    const p = new URLSearchParams();
+    const f = over.filter !== undefined ? over.filter : filter;
+    if (f && f !== 'all') p.set('filter', f);
+    if (q) p.set('q', q);
+    const l = over.live !== undefined ? over.live : live;
+    if (l) p.set('live', '1');
+    const s = p.toString();
+    return '/antivirus/admin/monitoring' + (s ? '?' + s : '');
+  };
+  const kindLabel = { register: 'Daftar akun', login: 'Login web', app_login: 'Login aplikasi', device: 'Aktivasi perangkat', order: 'Membuat pesanan', paid: 'Pembayaran lunas' };
+  const kindIcon = { register: '🆕', login: '🔑', app_login: '📲', device: '📱', order: '🛒', paid: '💰' };
+%>
+<% if (live) { %><meta http-equiv="refresh" content="30"><% } %>
+<div class="container wide">
+  <div class="page-head">
+    <h1>Monitoring Pengguna</h1>
+    <a class="btn secondary small live-toggle <%= live ? 'on' : '' %>" href="<%= qs({ live: !live }) %>">
+      <span class="live-dot"></span><%= live ? 'Live · refresh 30 dtk' : 'Aktifkan live' %>
+    </a>
+  </div>
+  <%- include('_tabs', { active: 'monitoring' }) %>
+  <% if (notice) { %><div class="success-banner"><%= notice %></div><% } %>
+
+  <div class="stat-grid">
+    <div class="card"><div class="stat-value"><span class="pulse"></span><%= stats.onlineNow %></div><div class="stat-label">Online sekarang (5 menit)</div></div>
+    <div class="card"><div class="stat-value"><%= stats.active24h %></div><div class="stat-label">Aktif 24 jam terakhir</div></div>
+    <div class="card"><div class="stat-value"><%= stats.newUsers7d %><span class="stat-of">/<%= stats.totalUsers %></span></div><div class="stat-label">Pengguna baru 7 hari / total</div></div>
+    <div class="card"><div class="stat-value"><%= stats.devicesActive24h %><span class="stat-of">/<%= stats.devicesTotal %></span></div><div class="stat-label">Perangkat Android aktif 24 jam</div></div>
+  </div>
+
+  <div class="two-col mon-cols">
+    <div class="card">
+      <h2 style="margin-top:0;">Pendaftaran 14 hari terakhir</h2>
+      <div class="bar-chart" role="img" aria-label="Grafik pendaftaran pengguna per hari">
+        <% chart.forEach(function(c) { const d = new Date(c.day + 'T00:00:00Z'); %>
+          <div class="bar-col" title="<%= d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', timeZone: 'UTC' }) %>: <%= c.n %> pendaftar">
+            <div class="bar-val"><%= c.n || '' %></div>
+            <div class="bar" style="height:<%= Math.round(c.n / chartMax * 100) %>%"></div>
+            <div class="bar-label"><%= d.getUTCDate() %></div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0;">Aktivitas terbaru</h2>
+      <% if (activity.length === 0) { %>
+        <div class="empty">Belum ada aktivitas.</div>
+      <% } else { %>
+        <ul class="feed">
+          <% activity.forEach(function(a) { %>
+            <li>
+              <span class="feed-icon"><%= kindIcon[a.kind] %></span>
+              <div class="feed-body">
+                <div><strong><%= a.email || '(lisensi tanpa akun)' %></strong> · <%= kindLabel[a.kind] %>
+                  <% if (a.detail) { %><span class="feed-detail mono"><%= a.kind === 'device' && a.detail.length > 10 ? a.detail.slice(0, 4) + '••••' + a.detail.slice(-4) : a.detail %></span><% } %>
+                </div>
+                <div class="feed-time" title="<%= fmtDateTime(a.at) %>"><%= timeAgo(a.at) %></div>
+              </div>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </div>
+  </div>
+
+  <h2>Aktivitas per pengguna</h2>
+  <div class="mon-toolbar">
+    <div class="filter-pills">
+      <% [['all','Semua'],['online','Online'],['today','Aktif hari ini'],['inactive','Tidak aktif']].forEach(function(f) { %>
+        <a class="<%= filter === f[0] ? 'active' : '' %>" href="<%= qs({ filter: f[0] }) %>"><%= f[1] %> <span><%= counts[f[0]] %></span></a>
+      <% }) %>
+    </div>
+    <form method="GET" action="/antivirus/admin/monitoring" class="mon-search">
+      <% if (filter !== 'all') { %><input type="hidden" name="filter" value="<%= filter %>"><% } %>
+      <% if (live) { %><input type="hidden" name="live" value="1"><% } %>
+      <input type="search" name="q" value="<%= q %>" placeholder="Cari email atau nama…">
+    </form>
+  </div>
+
+  <div class="table-wrap card">
+    <% if (users.length === 0) { %>
+      <div class="empty">Tidak ada pengguna yang cocok.</div>
+    <% } else { %>
+    <table>
+      <thead><tr><th>Pengguna</th><th>Status</th><th>Terakhir terlihat</th><th>Login terakhir</th><th>Browser · IP</th><th>Sesi</th><th>Lisensi / Perangkat</th><th></th></tr></thead>
+      <tbody>
+        <% users.forEach(function(u) { %>
+        <tr>
+          <td>
+            <a href="/antivirus/admin/users/<%= u.id %>"><%= u.email %></a>
+            <% if (u.is_admin) { %><span class="badge badge-ok" style="margin-left:6px;">Admin</span><% } %>
+            <div class="cell-sub"><%= u.name || '—' %> · daftar <%= fmtDate(u.created_at) %></div>
+          </td>
+          <td>
+            <% if (u.state === 'online') { %><span class="badge badge-ok">● Online</span>
+            <% } else if (u.state === 'today') { %><span class="badge badge-warn">Hari ini</span>
+            <% } else { %><span class="badge badge-muted">Tidak aktif</span><% } %>
+          </td>
+          <td title="<%= fmtDateTime(u.last_seen_at) %>"><%= timeAgo(u.last_seen_at) %></td>
+          <td title="<%= fmtDateTime(u.last_login_at) %>"><%= u.last_login_at ? timeAgo(u.last_login_at) : '—' %></td>
+          <td>
+            <%= u.browser || '—' %>
+            <div class="cell-sub mono"><%= u.last_ip || '' %></div>
+          </td>
+          <td><%= u.session_count %><% if (u.app_session_count) { %><div class="cell-sub"><%= u.app_session_count %> di aplikasi</div><% } %></td>
+          <td>
+            <%= u.active_licenses %> aktif · <%= u.device_count %> perangkat
+            <% if (u.device_last_seen) { %><div class="cell-sub">app terakhir <%= timeAgo(u.device_last_seen) %></div><% } %>
+          </td>
+          <td>
+            <% if (u.session_count > 0) { %>
+              <form method="POST" action="/antivirus/admin/monitoring/users/<%= u.id %>/logout" class="inline"
+                    onsubmit="return confirm('Akhiri semua sesi login pengguna ini (web dan aplikasi)? Lisensi yang sudah aktif di perangkat tidak terpengaruh.');">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="secondary small">Paksa keluar</button>
+              </form>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } %>
+  </div>
+  <p class="subtitle">Status online = ada aktivitas web dalam 5 menit terakhir. Aktivitas aplikasi Android dilacak lewat verifikasi lisensi perangkat. Data login, IP, dan browser mulai tercatat sejak fitur ini dipasang.</p>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,25 @@
+<% const title = 'Pengguna — Admin WhiteSecurity' %>
+<%- include('../partials/header', { title }) %>
+<div class="container wide">
+  <h1>Pengguna</h1>
+  <%- include('_tabs', { active: 'users' }) %>
+  <div class="table-wrap card">
+    <table>
+      <thead><tr><th>Email</th><th>Nama</th><th>Lisensi</th><th>Pesanan Lunas</th><th>Daftar Sejak</th><th>Admin</th></tr></thead>
+      <tbody>
+        <% users.forEach(function(u) { %>
+        <tr>
+          <td><a href="/antivirus/admin/users/<%= u.id %>"><%= u.email %></a></td>
+          <td><%= u.name || '-' %></td>
+          <td><%= u.license_count %></td>
+          <td><%= u.paid_order_count %></td>
+          <td><%= new Date(u.created_at).toLocaleDateString('id-ID') %></td>
+          <td><% if (u.is_admin) { %><span class="badge badge-ok">Admin</span><% } else { %>-<% } %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <p class="subtitle">Promosi ke admin hanya lewat CLI (<code>admin-cli.js create-admin</code>) — tidak ada jalur web untuk ini.</p>
+</div>
+<%- include('../partials/footer') %>

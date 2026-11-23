@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WhiteSecurity</string>
+    <string name="powered_by">Powered by WHITESECURITY.ID</string>
+    <string name="contact_support">Ada kendala? Hubungi admin@whitesecurity.id</string>
+
+    <string name="dashboard_title">WhiteSecurity</string>
+    <string name="app_tagline">Security on Your Hands</string>
+    <string name="scan_installed_apps">Scan Aplikasi Terinstal</string>
+    <string name="scan_file">Scan File APK</string>
+    <string name="last_scan_none">Belum pernah scan</string>
+    <string name="scanning_in_progress">Memindai…</string>
+    <string name="threats_found">%d ancaman ditemukan</string>
+    <string name="no_threats_found">Tidak ada malware atau spyware ditemukan</string>
+    <string name="monitoring_on">Perlindungan real-time aktif</string>
+    <string name="monitoring_on_detail">Setiap aplikasi baru otomatis dipindai dan dicek ke cloud threat database.</string>
+    <string name="premium_badge">PREMIUM</string>
+    <string name="premium_active_badge">Premium aktif</string>
+    <string name="deep_scan_label">Scan mendalam — termasuk aplikasi sistem</string>
+    <string name="deep_scan_locked">Scan mendalam (Premium) — ikut memindai aplikasi bawaan pabrik</string>
+    <string name="premium_tools_title">Perlindungan Lanjutan</string>
+
+    <string name="premium_title">WhiteSecurity Premium</string>
+    <string name="premium_subtitle">Perlindungan dasar gratis untuk semua. Premium menambah analisis mendalam untuk melawan penipuan APK.</string>
+    <string name="free_section_title">Gratis untuk semua pengguna</string>
+    <string name="free_feature_scan">Scan malware &amp; spyware untuk aplikasi terinstal dan file APK</string>
+    <string name="free_feature_stalkerware">Deteksi stalkerware (aplikasi penyadap) dan aplikasi tersembunyi</string>
+    <string name="free_feature_realtime">Perlindungan real-time saat aplikasi baru dipasang</string>
+    <string name="free_feature_cloud">Cek ke cloud threat database + update signature otomatis</string>
+    <string name="free_feature_history">Riwayat scan tanpa batas</string>
+    <string name="premium_section_title">Khusus Premium</string>
+    <string name="premium_feature_scamshield">Perisai Anti-Penipuan APK — temukan aplikasi yang memegang akses Aksesibilitas, notifikasi, admin perangkat, atau SMS</string>
+    <string name="premium_feature_checkup">Pemeriksaan Keamanan Perangkat — skor 0–100 dan langkah perbaikan</string>
+    <string name="premium_feature_deepscan">Scan mendalam aplikasi sistem / bawaan pabrik</string>
+    <string name="premium_buy_hint">Sudah beli lewat akun? Masuk di menu Akun (ikon profil) untuk mengaktifkan Premium tanpa mengetik kode. Belum punya? Beli di whitesecurity.id/antivirus/products</string>
+    <string name="license_expires">Berlaku hingga %s</string>
+    <string name="license_lifetime">Lisensi seumur hidup</string>
+
+    <string name="scamshield_title">Perisai Anti-Penipuan</string>
+    <string name="scamshield_desc">Memeriksa aplikasi yang sedang memegang akses sensitif — pola yang dipakai APK penipuan untuk mencuri OTP dan mengambil alih layar.</string>
+    <string name="scamshield_run">Periksa sekarang</string>
+    <string name="scamshield_clean">Tidak ada aplikasi yang memegang akses sensitif. 👍</string>
+    <string name="scamshield_high">Risiko tinggi</string>
+    <string name="scamshield_review">Perlu ditinjau</string>
+    <string name="scamshield_sideloaded">Dipasang dari luar toko resmi</string>
+    <string name="scamshield_note">Aplikasi resmi seperti password manager atau aplikasi smartwatch juga bisa muncul di sini. Jika Anda tidak mengenali aplikasinya, segera uninstall.</string>
+    <string name="open_app_info">Buka info aplikasi</string>
+    <string name="advice_malware">Aplikasi ini cocok dengan database malware. Uninstall segera lewat "Buka info aplikasi" → Uninstall, lalu ganti password akun penting Anda.</string>
+    <string name="advice_stalkerware">Aplikasi pemantau (stalkerware) yang bisa merekam lokasi, pesan, dan panggilan Anda. Jika Anda curiga dipasang oleh orang lain, ingat bahwa menghapusnya bisa diketahui pemasangnya — pikirkan keselamatan Anda dulu dan pertimbangkan meminta bantuan layanan pendampingan sebelum menghapus.</string>
+    <string name="advice_spyware">Aplikasi tersembunyi dengan akses pengawasan. Jika Anda tidak pernah memasangnya dengan sengaja, buka info aplikasi lalu uninstall atau cabut izinnya.</string>
+    <string name="advice_risky">Kombinasi izin ini sering dipakai malware, tapi aplikasi resmi juga bisa membutuhkannya. Tinjau apakah izinnya masuk akal untuk fungsi aplikasi tersebut.</string>
+
+    <string name="checkup_title">Pemeriksaan Keamanan</string>
+    <string name="checkup_desc">Menilai pengaturan keamanan HP Anda dan menunjukkan apa yang perlu diperbaiki.</string>
+    <string name="checkup_run">Mulai pemeriksaan</string>
+    <string name="checkup_rerun">Periksa ulang</string>
+    <string name="checkup_score_label">Skor keamanan</string>
+    <string name="checkup_issues">%d hal perlu diperbaiki</string>
+    <string name="checkup_all_good">Semua pemeriksaan lolos</string>
+    <string name="fix">Perbaiki</string>
+    <string name="locked_feature">Fitur Premium</string>
+
+    <string name="account_title">Akun Saya</string>
+    <string name="account_login_title">Akun WhiteSecurity</string>
+    <string name="account_intro">Masuk untuk melihat lisensi, perangkat, dan riwayat pembelian — dan aktifkan Premium tanpa mengetik kode. Akun yang sama dengan whitesecurity.id.</string>
+    <string name="account_tab_login">Masuk</string>
+    <string name="account_tab_register">Daftar</string>
+    <string name="account_name">Nama (opsional)</string>
+    <string name="account_email">Email</string>
+    <string name="account_password">Password</string>
+    <string name="account_password_hint">Minimal 8 karakter</string>
+    <string name="account_forgot">Kelola akun di whitesecurity.id</string>
+    <string name="account_logout">Keluar</string>
+    <string name="account_refresh">Muat ulang</string>
+    <string name="account_retry">Coba lagi</string>
+    <string name="account_signin_cta">Masuk / Daftar</string>
+    <string name="license_key_hint">Masukkan kode lisensi (WSEC-XXXX-XXXX-XXXX-XXXX)</string>
+    <string name="activate">Aktifkan</string>
+    <string name="license_valid">Lisensi aktif</string>
+    <string name="license_invalid">Kode lisensi tidak valid</string>
+
+    <string name="scan_history_title">Riwayat Pemindaian</string>
+    <string name="scan_history_empty">Belum ada riwayat pemindaian</string>
+    <string name="scan_history_apps_scanned">Diperiksa: %d aplikasi</string>
+
+    <string name="severity_low">Rendah</string>
+    <string name="severity_medium">Sedang</string>
+    <string name="severity_high">Tinggi</string>
+    <string name="severity_critical">Kritis</string>
+
+    <string name="notif_channel_scan">Hasil Pemindaian</string>
+    <string name="notif_channel_updates">Pembaruan Aplikasi</string>
+    <string name="update_available_title">Update tersedia: v%s</string>
+    <string name="update_available_text">%s MB · ketuk Perbarui untuk memasang versi terbaru</string>
+    <string name="update_install">Perbarui</string>
+    <string name="update_notif_available">WhiteSecurity v%s tersedia</string>
+    <string name="update_notif_available_text">Ketuk untuk memperbarui aplikasi.</string>
+    <string name="update_notif_ready">Pasang WhiteSecurity v%s</string>
+    <string name="update_notif_ready_text">Update sudah diunduh dan diverifikasi — ketuk untuk memasang.</string>
+    <string name="notif_new_app_scanned">Aplikasi baru dipindai: %s</string>
+    <string name="notif_threat_detected">Ancaman terdeteksi: %s</string>
+    <string name="notif_scan_summary_threats">%d ancaman ditemukan saat pemindaian terjadwal</string>
+    <string name="notif_scan_summary_clean">Pemindaian terjadwal selesai — tidak ada ancaman</string>
+    <string name="notif_scan_summary_text">%d aplikasi diperiksa</string>
+</resources>

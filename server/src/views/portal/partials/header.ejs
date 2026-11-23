@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'WhiteSecurity Portal' %></title>
+  <link rel="stylesheet" href="/antivirus/assets/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="/antivirus/products">White<span>Security</span></a>
+    <div class="nav-links">
+      <% if (typeof user !== 'undefined' && user) { %>
+        <a href="/antivirus/download">Unduh Aplikasi</a>
+        <a href="/antivirus/products">Produk</a>
+        <a href="/antivirus">Dashboard</a>
+        <a href="/antivirus/orders">Riwayat</a>
+        <% if (user.is_admin) { %><a href="/antivirus/admin">Admin</a><% } %>
+        <form class="inline" method="POST" action="/antivirus/logout">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button class="secondary small" type="submit">Keluar</button>
+        </form>
+      <% } else { %>
+        <a href="/antivirus/download">Unduh Aplikasi</a>
+        <a href="/antivirus/products">Produk</a>
+        <a href="/antivirus/login">Masuk</a>
+        <a class="btn small" href="/antivirus/register">Daftar</a>
+      <% } %>
+    </div>
+  </nav>

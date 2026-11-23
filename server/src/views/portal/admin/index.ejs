@@ -1,0 +1,14 @@
+<% const title = 'Admin — WhiteSecurity Portal' %>
+<%- include('../partials/header', { title }) %>
+<div class="container wide">
+  <h1>Admin Overview</h1>
+  <%- include('_tabs', { active: 'home' }) %>
+  <div class="stat-grid">
+    <div class="card"><div class="stat-value"><%= userCount %></div><div class="stat-label">Total pengguna</div></div>
+    <div class="card"><div class="stat-value"><%= activeLicenseCount %></div><div class="stat-label">Lisensi aktif</div></div>
+    <div class="card"><div class="stat-value">Rp<%= Number(revenueThisMonth).toLocaleString('id-ID') %></div><div class="stat-label">Pendapatan bulan ini</div></div>
+    <div class="card"><div class="stat-value"><%= pendingOrderCount %></div><div class="stat-label">Pesanan menunggu</div></div>
+    <div class="card"><div class="stat-value"><%= downloads.total %></div><div class="stat-label">Unduhan APK (<%= downloads.week %> minggu ini) · <a href="/antivirus/download">halaman unduh</a></div></div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

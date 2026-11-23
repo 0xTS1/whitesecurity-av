@@ -1,0 +1,36 @@
+<% const title = 'Paket Premium — WhiteSecurity Portal' %>
+<%- include('partials/header', { title }) %>
+<div class="container">
+  <h1>Paket Premium</h1>
+  <p class="subtitle">Perisai Anti-Penipuan APK, Pemeriksaan Keamanan Perangkat (skor 0–100), dan scan mendalam aplikasi sistem.</p>
+  <div class="card" style="margin-bottom:20px;">
+    <strong>Gratis untuk semua pengguna:</strong> scan aplikasi &amp; file APK, perlindungan real-time saat aplikasi baru dipasang, cek cloud threat database, dan riwayat scan tanpa batas.
+    <div><a class="btn secondary" href="/antivirus/download">⬇ Unduh aplikasi gratis</a></div>
+  </div>
+  <% if (error) { %><div class="error-banner"><%= error %></div><% } %>
+
+  <% if (products.length === 0) { %>
+    <div class="card empty">Belum ada paket yang tersedia saat ini.</div>
+  <% } else { %>
+  <div class="pricing-grid">
+    <% products.forEach(function(p) { %>
+    <div class="card">
+      <h2 style="margin-top:0;"><%= p.name %></h2>
+      <div class="price">Rp<%= Number(p.price_idr).toLocaleString('id-ID') %></div>
+      <p class="subtitle"><%= p.description || '' %></p>
+      <p class="subtitle"><%= p.devices %> perangkat &middot; <%= p.duration_days %> hari</p>
+      <% if (typeof user !== 'undefined' && user) { %>
+        <form method="POST" action="/antivirus/orders">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input type="hidden" name="productId" value="<%= p.id %>">
+          <button type="submit">Beli Sekarang</button>
+        </form>
+      <% } else { %>
+        <a class="btn" href="/antivirus/login?next=/antivirus/products">Masuk untuk membeli</a>
+      <% } %>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

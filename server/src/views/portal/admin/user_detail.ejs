@@ -1,0 +1,51 @@
+<% const title = viewedUser.email + ' — Admin WhiteSecurity' %>
+<%- include('../partials/header', { title }) %>
+<div class="container wide">
+  <h1><%= viewedUser.email %></h1>
+  <p class="subtitle"><a href="/antivirus/admin/users">&larr; Kembali ke daftar pengguna</a></p>
+
+  <h2>Lisensi</h2>
+  <% if (licenses.length === 0) { %>
+    <div class="card empty">Belum ada lisensi.</div>
+  <% } else { %>
+  <div class="table-wrap card">
+    <table>
+      <thead><tr><th>Kode</th><th>Paket</th><th>Perangkat Maks</th><th>Berlaku Hingga</th><th>Status</th></tr></thead>
+      <tbody>
+        <% licenses.forEach(function(l) { %>
+        <tr>
+          <td class="mono"><%= l.license_key %></td>
+          <td><%= l.plan %></td>
+          <td><%= l.max_devices %></td>
+          <td><%= l.expires_at ? new Date(l.expires_at).toLocaleDateString('id-ID') : 'Selamanya' %></td>
+          <td><% if (l.revoked) { %><span class="badge badge-bad">Dicabut</span><% } else { %><span class="badge badge-ok">Aktif</span><% } %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+
+  <h2>Pesanan</h2>
+  <% if (orders.length === 0) { %>
+    <div class="card empty">Belum ada pesanan.</div>
+  <% } else { %>
+  <div class="table-wrap card">
+    <table>
+      <thead><tr><th>ID Pesanan</th><th>Produk</th><th>Jumlah</th><th>Status</th><th>Tanggal</th></tr></thead>
+      <tbody>
+        <% orders.forEach(function(o) { %>
+        <tr>
+          <td class="mono"><%= o.order_id %></td>
+          <td><%= o.product_name %></td>
+          <td>Rp<%= Number(o.amount).toLocaleString('id-ID') %></td>
+          <td><%= o.status %></td>
+          <td><%= new Date(o.created_at).toLocaleString('id-ID') %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

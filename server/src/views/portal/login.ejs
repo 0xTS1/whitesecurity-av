@@ -1,0 +1,19 @@
+<% const title = 'Masuk — WhiteSecurity Portal' %>
+<%- include('partials/header', { title }) %>
+<div class="container" style="max-width:420px;">
+  <h1>Masuk</h1>
+  <p class="subtitle">Masuk untuk melihat status lisensi dan riwayat pembelian.</p>
+  <% if (error) { %><div class="error-banner"><%= error %></div><% } %>
+  <div class="card">
+    <form method="POST" action="/antivirus/login">
+      <input type="hidden" name="next" value="<%= next %>">
+      <label>Email</label>
+      <input type="email" name="email" required autofocus>
+      <label>Password</label>
+      <input type="password" name="password" required>
+      <button type="submit">Masuk</button>
+    </form>
+  </div>
+  <p class="subtitle">Belum punya akun? <a href="/antivirus/register">Daftar di sini</a>.</p>
+</div>
+<%- include('partials/footer') %>

@@ -1,0 +1,30 @@
+<% const title = 'Riwayat Pesanan — WhiteSecurity Portal' %>
+<%- include('partials/header', { title }) %>
+<div class="container">
+  <h1>Riwayat Pesanan</h1>
+  <% if (orders.length === 0) { %>
+    <div class="card empty">Belum ada pesanan. <a href="/antivirus/products">Lihat paket premium</a>.</div>
+  <% } else { %>
+    <div class="table-wrap card">
+      <table>
+        <thead><tr><th>ID Pesanan</th><th>Produk</th><th>Jumlah</th><th>Status</th><th>Tanggal</th></tr></thead>
+        <tbody>
+          <% orders.forEach(function(o) { %>
+          <tr>
+            <td class="mono"><%= o.order_id %></td>
+            <td><%= o.product_name %></td>
+            <td>Rp<%= Number(o.amount).toLocaleString('id-ID') %></td>
+            <td>
+              <% if (o.status === 'paid') { %><span class="badge badge-ok">Lunas</span>
+              <% } else if (o.status === 'pending' || o.status === 'processing') { %><span class="badge badge-warn">Menunggu</span>
+              <% } else { %><span class="badge badge-bad"><%= o.status %></span><% } %>
+            </td>
+            <td><%= new Date(o.created_at).toLocaleString('id-ID') %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

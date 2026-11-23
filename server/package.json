@@ -1,0 +1,19 @@
+{
+  "name": "whitesecurity-server",
+  "version": "1.0.0",
+  "description": "WhiteSecurity.ID backend: license activation/verification and malware hash lookup API for the WhiteSecurity Android app",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "admin": "node scripts/admin-cli.js"
+  },
+  "dependencies": {
+    "ejs": "^7.0.1",
+    "express": "^4.21.2"
+  }
+}

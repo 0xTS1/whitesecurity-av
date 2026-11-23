@@ -1,0 +1,53 @@
+<% const title = 'Produk — Admin WhiteSecurity' %>
+<%- include('../partials/header', { title }) %>
+<div class="container wide">
+  <h1>Produk / Paket</h1>
+  <%- include('_tabs', { active: 'products' }) %>
+
+  <h2>Tambah / Ubah Produk</h2>
+  <p class="subtitle">Slug yang sama akan memperbarui produk yang sudah ada (upsert).</p>
+  <div class="card">
+    <form method="POST" action="/antivirus/admin/products">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>Slug (unik, mis. premium-1y)</label>
+      <input type="text" name="slug" required>
+      <label>Nama Tampilan</label>
+      <input type="text" name="name" required>
+      <label>Deskripsi</label>
+      <input type="text" name="description">
+      <label>Jumlah Perangkat</label>
+      <input type="number" name="devices" value="1" min="1">
+      <label>Durasi (hari)</label>
+      <input type="number" name="days" required min="1">
+      <label>Harga (IDR)</label>
+      <input type="number" name="price" required min="0">
+      <button type="submit">Simpan Produk</button>
+    </form>
+  </div>
+
+  <h2>Semua Produk</h2>
+  <div class="table-wrap card">
+    <table>
+      <thead><tr><th>Slug</th><th>Nama</th><th>Perangkat</th><th>Durasi</th><th>Harga</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <% products.forEach(function(p) { %>
+        <tr>
+          <td class="mono"><%= p.slug %></td>
+          <td><%= p.name %></td>
+          <td><%= p.devices %></td>
+          <td><%= p.duration_days %> hari</td>
+          <td>Rp<%= Number(p.price_idr).toLocaleString('id-ID') %></td>
+          <td><% if (p.active) { %><span class="badge badge-ok">Aktif</span><% } else { %><span class="badge badge-muted">Nonaktif</span><% } %></td>
+          <td>
+            <form class="inline" method="POST" action="/antivirus/admin/products/<%= p.id %>/toggle">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button class="small secondary" type="submit"><%= p.active ? 'Nonaktifkan' : 'Aktifkan' %></button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../partials/footer') %>
